@@ -1,10 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:ngdemo17/services/prefs_servise.dart';
 
-import '../pages/signin_page.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;

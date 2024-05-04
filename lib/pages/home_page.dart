@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/home_controller.dart';
 import 'my_feed_page.dart';
 
 import 'my_like_page.dart';
@@ -17,79 +19,87 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final homeController = Get.find<HomeController>();
 
-  PageController? _pageController;
-  int _currentTap = 0;
+  // PageController? _pageController;
+  // int _currentTap = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _pageController = PageController();
+    homeController.pageController = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: [
-          MyFeedPage(pageController: _pageController,),
-          const MySearchPage(),
-          MyUploadPage(pageController: _pageController,),
-          const MyLikesPage(),
-          const MyProfilePage(),
-        ],
-        onPageChanged: (int index){
-          setState(() {
-            _currentTap = index;
-          });
-        },
-      ),
+    return GetBuilder<HomeController>(builder:(_){
+      return Scaffold(
+        body:GetBuilder<HomeController>(
+          builder: (controller){
+            return  PageView(
+              controller:homeController. pageController,
+              children: [
+                MyFeedPage(pageController:homeController.pageController,),
+                const MySearchPage(),
+                MyUploadPage(pageController:homeController. pageController,),
+                const MyLikesPage(),
+                const MyProfilePage(),
+              ],
+              onPageChanged: (int index){
 
-      bottomNavigationBar: CupertinoTabBar(
-        onTap: (int index){
-          setState(() {
-            _currentTap = index;
-            _pageController!.animateToPage(index,
+                homeController. onPageChanged(index);
+
+
+              },
+            );
+          },
+        ),
+
+        bottomNavigationBar: CupertinoTabBar(
+          onTap: (int index){
+
+            homeController.animateToPage(index);
+
+            homeController. pageController!.animateToPage(index,
                 duration: Duration(milliseconds: 200), curve: Curves.easeIn);
-          });
-        },
-        currentIndex: _currentTap,
-        activeColor: Color.fromRGBO(193, 53, 132, 1),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              size: 32,
+          },
+          currentIndex: homeController.currentTap,
+          activeColor: Color.fromRGBO(193, 53, 132, 1),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: 32,
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              size: 32,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+                size: 32,
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_box,
-              size: 32,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_box,
+                size: 32,
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.favorite,
-              size: 32,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.favorite,
+                size: 32,
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.account_circle,
-              size: 32,
-            ),
-          )
-        ],
-      ),
-    );
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle,
+                size: 32,
+              ),
+            )
+          ],
+        ),
+      );
+    } );
   }
 }

@@ -1,12 +1,11 @@
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/route_manager.dart';
 import 'package:ngdemo17/services/prefs_servise.dart';
 import 'package:platform_device_id_v3/platform_device_id.dart';
 
 class Utils {
-
   static void fireToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
@@ -19,31 +18,28 @@ class Utils {
   }
 
   static Future<bool> dialogCommon(
-      BuildContext context, String title, String message, bool isSingle) async {
-    return await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(message),
-            actions: [
-              !isSingle
-                  ? MaterialButton(
+      BuildContext context,String title, String message, bool isSingle) async {
+    return await Get.defaultDialog(
+        content: AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: [
+        !isSingle
+            ? MaterialButton(
                 onPressed: () {
-                  Navigator.of(context).pop(false);
+                  Get.back(result: false);
                 },
                 child: const Text("Cancel"),
               )
-                  : const SizedBox.shrink(),
-              MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text("Confirm"),
-              ),
-            ],
-          );
-        });
+            : const SizedBox.shrink(),
+        MaterialButton(
+          onPressed: () {
+            Get.back(result: true);
+          },
+          child: const Text("Confirm"),
+        ),
+      ],
+    ));
   }
 
   static String currentDate() {
@@ -74,9 +70,4 @@ class Utils {
     }
     return params;
   }
-
 }
-
-
-
-

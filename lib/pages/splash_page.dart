@@ -1,14 +1,9 @@
-import 'dart:async';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:ngdemo17/pages/signin_page.dart';
+import 'package:get/instance_manager.dart';
 
-import '../services/auth_service.dart';
-import '../services/log_service.dart';
-import '../services/notif_service.dart';
-import '../services/prefs_servise.dart';
-import 'home_page.dart';
+import '../controllers/splash_controller.dart';
+
 class SplashPage extends StatefulWidget {
   static const String id="splash_page";
   const SplashPage({super.key});
@@ -18,67 +13,17 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-  _callNextPage(){
-    if(AuthService.isLoggedIn()){
-      Navigator.pushReplacementNamed(context, HomePage.id);
-    }else{
-      Navigator.pushReplacementNamed(context, SignInPage.id);
-    }
-  }
+  final _controller = Get.find<SplashController>();
 
 
-  _initNotification() async{
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if(settings.authorizationStatus == AuthorizationStatus.authorized){
-      LogService.i('User granted permission');
-    }else{
-      LogService.e('User declined or has not accepted permission');
-    }
-
-    _firebaseMessaging.getToken().then((value) async{
-      String fcmToken = value.toString();
-      Prefs.saveFCM(fcmToken);
-      String token = await Prefs.loadFCM();
-      LogService.i("FCM Token: $token");
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      String title = message.notification!.title.toString();
-      String body = message.notification!.body.toString();
-      LogService.i(title);
-      LogService.i(body);
-      LogService.i(message.data.toString());
-
-      NotifService().showLocalNotification(title,body);
-
-      //
-    });
-  }
-  initTimer(){
-    Timer(Duration(seconds: 2,),(){
-      //print("Waited 2 second");
-      _callNextPage();
-    });
-  }
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initTimer();
-    _initNotification();
+   _controller. initTimer(context);
+   _controller.initNotification();
   }
 
   @override

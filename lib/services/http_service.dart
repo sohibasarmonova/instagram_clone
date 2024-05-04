@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:ngdemo17/model/member_model.dart';
-import 'package:ngdemo17/services/log_service.dart';
 import '../model/notification_model.dart';
 
 class Network {
